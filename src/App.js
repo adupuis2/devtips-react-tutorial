@@ -151,10 +151,6 @@ class App extends Component {
     setTimeout(() => {
       this.setState({ serverData: fakeServerData });
     }, 250);
-
-    // setTimeout(() => {
-    //   this.setState({ filterString: "data of" });
-    // }, 750);
   }
 
   render() {
