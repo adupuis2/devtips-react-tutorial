@@ -81,7 +81,7 @@ class PlaylistCounter extends Component {
   render() {
     return (
       <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
-        <h2>{ this.props.playlists.length } playlists</h2>
+        <h2>{this.props.playlists.length} playlists</h2>
       </div>
     );
   }
@@ -96,11 +96,11 @@ class HoursCounter extends Component {
     let hours = allSongs.reduce((acc, song) => {
       return (acc + song.duration);
     }, 0);
-    
-    hours = Math.round((hours/60)/60 * 100)/100;
+
+    hours = Math.round((hours / 60) / 60 * 100) / 100;
     return (
       <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
-        <h2>{ hours } hours</h2>
+        <h2>{hours} hours</h2>
       </div>
     );
   }
@@ -109,10 +109,9 @@ class HoursCounter extends Component {
 class Filter extends Component {
   render() {
     return (
-      <div style={ defaultStyle }>
+      <div style={defaultStyle}>
         <img />
-        <input type="text" />
-        Filter
+        <input type="text" onKeyUp={event => this.props.onTextChange(event.target.value)}/>
       </div>
     );
   }
@@ -124,12 +123,12 @@ class Playlist extends Component {
     return (
       <div style={{ ...defaultStyle, width: "25%", display: "inline-block" }}>
         <img />
-        <h3>{ playlist.name }</h3>
+        <h3>{playlist.name}</h3>
         <ul>
-          { 
-            playlist.songs.map(song => 
+          {
+            playlist.songs.map(song =>
               <li>
-                { song.name } -- { Math.floor(song.duration*100/60)/100 }m long
+                {song.name} -- {Math.floor(song.duration * 100 / 60) / 100}m long
               </li>
             )
           }
@@ -142,33 +141,49 @@ class Playlist extends Component {
 class App extends Component {
   constructor() {
     super();
-    this.state = { serverData: {} };
+    this.state = {
+      serverData: {},
+      filterString: "",
+    };
   }
 
   componentDidMount() {
     setTimeout(() => {
       this.setState({ serverData: fakeServerData });
     }, 250);
+
+    // setTimeout(() => {
+    //   this.setState({ filterString: "data of" });
+    // }, 750);
   }
 
   render() {
+    let playlistsToRender = this.state.serverData.user ? 
+      (
+        this.state.serverData.user.playlists
+          .filter(playlist =>
+            playlist.name.toLowerCase()
+              .includes(this.state.filterString.toLowerCase())
+          )
+      ) : [];
+
     return (
       <div className="App">
         {
           this.state.serverData.user ?
             <div>
               <h1 style={{ ...defaultStyle, "font-size": "54px" }}>
-                { this.state.serverData.user.name + "'s" } Playlists
+                {this.state.serverData.user.name + "'s"} Playlists
               </h1>
-              <PlaylistCounter playlists={ this.state.serverData.user.playlists } />
-              <HoursCounter playlists={ this.state.serverData.user.playlists } />
-              <Filter />
+              <PlaylistCounter playlists={playlistsToRender} />
+              <HoursCounter playlists={playlistsToRender} />
+              <Filter onTextChange={text => this.setState({filterString: text})} />
               {
-                this.state.serverData.user.playlists.map(playlist =>
-                  <Playlist playlist={ playlist } />
+                playlistsToRender.map(playlist =>
+                  <Playlist playlist={playlist} />
                 )
               }
-            </div> : <h1 style={ defaultStyle }>Loading...</h1>
+            </div> : <h1 style={defaultStyle}>Loading...</h1>
         }
       </div>
     );
