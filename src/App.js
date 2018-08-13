@@ -118,14 +118,16 @@ class App extends Component {
       headers: { "Authorization": "Bearer " + accessToken }
     })
       .then(response => response.json())
-      .then(data => this.setState({
-        playlists: data.items.map(item => ({
-          name: item.name,
-          imageUrl: item.images[0].url,
-          songs: []
-        }))
-      })
-      );
+      .then(function (data) {
+        (data.items && data.items.length && data.items.length > 0) && 
+        this.setState({
+          playlists: data.items.map(item => ({
+            name: item.name,
+            imageUrl: item.images[0].url,
+            songs: []
+          }))
+        });
+      });
   }
 
   render() {
@@ -145,7 +147,7 @@ class App extends Component {
     return (
       <div className="App">
         {
-          this.state.user ?
+          this.state.user && this.state.user.length > 0 ?
             <div>
               <h1 style={{ ...defaultStyle, "fontSize": "54px" }}>
                 {this.state.user.name + "'s"} Playlists
