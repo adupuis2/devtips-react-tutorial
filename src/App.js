@@ -1,81 +1,34 @@
 import React, { Component } from "react";
+import qs from "query-string";
 import "./App.css";
 
 let defaultStyle = {
   color: "#f9499e",
 };
 
-let fakeServerData = {
-  user: {
-    name: "Alain",
-    playlists: [
-      {
-        name: "Favorites",
-        songs: [{
-          name: "Beat It",
-          duration: 17144
-        },
-        {
-          name: "Banana Bread",
-          duration: 48882
-        },
-        {
-          name: "Down in It",
-          duration: 45877
-        }]
-        ,
-      },
-      {
-        name: "Mock Data",
-        songs: [{
-          name: "Song 1",
-          duration: 20975
-        },
-        {
-          name: "Song 2",
-          duration: 2193
-        },
-        {
-          name: "Song 3",
-          duration: 2917
-        }]
-        ,
-      },
-      {
-        name: "Worst Data of All Time",
-        songs: [{
-          name: "Ugh",
-          duration: 31801
-        },
-        {
-          name: "Unf",
-          duration: 21248
-        },
-        {
-          name: "Oof",
-          duration: 12640
-        }]
-        ,
-      },
-      {
-        name: "Last Data of All Time",
-        songs: [{
-          name: "Bump",
-          duration: 14406
-        },
-        {
-          name: "Boop",
-          duration: 6957
-        },
-        {
-          name: "Beep",
-          duration: 49893
-        }]
-        ,
-      }
-    ]
-  }
-};
+// let fakeServerData = {
+//   user: {
+//     name: "Alain",
+//     playlists: [
+//       {
+//         name: "Favorites",
+//         songs: [{
+//           name: "Beat It",
+//           duration: 17144
+//         },
+//         {
+//           name: "Banana Bread",
+//           duration: 48882
+//         },
+//         {
+//           name: "Down in It",
+//           duration: 45877
+//         }]
+//         ,
+//       },
+//     ]
+//   }
+// };
 
 class PlaylistCounter extends Component {
   render() {
@@ -142,44 +95,75 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      serverData: {},
+      user: {},
+      playlists: {},
       filterString: "",
     };
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({ serverData: fakeServerData });
-    }, 250);
+    let parsed = qs.parse(window.location.search);
+    let accessToken = parsed.access_token;
+    fetch("https://api.spotify.com/v1/me", {
+      headers: { "Authorization": "Bearer " + accessToken }
+    })
+      .then(response => response.json())
+      .then(data => this.setState({
+        user: {
+          name: data.display_name
+        }
+      }));
+
+    fetch("https://api.spotify.com/v1/me/playlists", {
+      headers: { "Authorization": "Bearer " + accessToken }
+    })
+      .then(response => response.json())
+      .then(data => this.setState({
+        playlists: data.items.map(item => ({
+          name: item.name,
+          songs: []
+        }))
+      })
+      );
   }
 
   render() {
-    let playlistsToRender = this.state.serverData.user ? 
-      (
-        this.state.serverData.user.playlists
+    //let usr = this.state.userData.user;
+    let playlistsToRender =
+      (this.state.user &&
+        this.state.playlists &&
+        this.state.playlists.length > 0)
+        ?
+        this.state.playlists
           .filter(playlist =>
             playlist.name.toLowerCase()
               .includes(this.state.filterString.toLowerCase())
           )
-      ) : [];
+        : [];
 
     return (
       <div className="App">
         {
-          this.state.serverData.user ?
+          this.state.user ?
             <div>
-              <h1 style={{ ...defaultStyle, "font-size": "54px" }}>
-                {this.state.serverData.user.name + "'s"} Playlists
+              <h1 style={{ ...defaultStyle, "fontSize": "54px" }}>
+                {this.state.user.name + "'s"} Playlists
               </h1>
               <PlaylistCounter playlists={playlistsToRender} />
               <HoursCounter playlists={playlistsToRender} />
-              <Filter onTextChange={text => this.setState({filterString: text})} />
+              <Filter onTextChange={text => this.setState({ filterString: text })} />
               {
                 playlistsToRender.map(playlist =>
                   <Playlist playlist={playlist} />
                 )
               }
-            </div> : <h1 style={defaultStyle}>Loading...</h1>
+            </div> : <button
+              onClick={() => window.location = "http://localhost:8888/login"}
+              style={{
+                "padding": "20px",
+                "fontSize": "50px",
+                "marginTop": "20px"
+              }}>Sign in to Spotify</button>
         }
       </div>
     );
