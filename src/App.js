@@ -118,8 +118,10 @@ class App extends Component {
       headers: { "Authorization": "Bearer " + accessToken }
     })
       .then(response => response.json())
-      .then(function (data) {
-        (data.items && data.items.length && data.items.length > 0) && 
+      .then((data) => {
+        if (!data || !data.items || !data.items.length || !data.items.length > 0) {
+          return null;
+        }
         this.setState({
           playlists: data.items.map(item => ({
             name: item.name,
@@ -147,7 +149,7 @@ class App extends Component {
     return (
       <div className="App">
         {
-          this.state.user && this.state.user.length > 0 ?
+          this.state.user  ?
             <div>
               <h1 style={{ ...defaultStyle, "fontSize": "54px" }}>
                 {this.state.user.name + "'s"} Playlists
