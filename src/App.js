@@ -75,7 +75,7 @@ class Playlist extends Component {
     let playlist = this.props.playlist;
     return (
       <div style={{ ...defaultStyle, width: "25%", display: "inline-block" }}>
-        <img />
+        <img src={playlist.imageUrl} style={{width: "170px"}}/>
         <h3>{playlist.name}</h3>
         <ul>
           {
@@ -121,6 +121,7 @@ class App extends Component {
       .then(data => this.setState({
         playlists: data.items.map(item => ({
           name: item.name,
+          imageUrl: item.images[0].url,
           songs: []
         }))
       })
