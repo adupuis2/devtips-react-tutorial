@@ -95,8 +95,6 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      user: {},
-      playlists: {},
       filterString: "",
     };
   }
@@ -104,6 +102,8 @@ class App extends Component {
   componentDidMount() {
     let parsed = qs.parse(window.location.search);
     let accessToken = parsed.access_token;
+    if (!accessToken)
+      return;
     fetch("https://api.spotify.com/v1/me", {
       headers: { "Authorization": "Bearer " + accessToken }
     })
@@ -139,11 +139,9 @@ class App extends Component {
         this.state.playlists &&
         this.state.playlists.length > 0)
         ?
-        this.state.playlists
-          .filter(playlist =>
-            playlist.name.toLowerCase()
-              .includes(this.state.filterString.toLowerCase())
-          )
+        this.state.playlists.filter(playlist =>
+          playlist.name.toLowerCase().includes(
+            this.state.filterString.toLowerCase()))
         : [];
 
     return (
