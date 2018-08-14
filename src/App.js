@@ -104,6 +104,9 @@ class App extends Component {
 
 
   render() {
+    // abbreviations for readability
+    let fs = this.state.filterString.toLowerCase();
+
     // Ensure we have playlist data to filter
     let playlistsToRender =
       (this.state.user
@@ -111,10 +114,18 @@ class App extends Component {
         && this.state.playlists.length > 0)
 
         // Apply filtering from filter textbox
-        ? this.state.playlists.filter(playlist =>
-          playlist.name.toLowerCase().includes(
-            this.state.filterString.toLowerCase()))
-        : []; // Set as empty array if we have no playlist data
+        ?
+        // Playlist name filtering
+        this.state.playlists.filter(playlist => {
+          let inPlaylistName = playlist.name.toLowerCase().includes(fs);
+          if (inPlaylistName)
+            return true;
+          else
+            // Song name filtering
+            return playlist.songs.some(song =>
+              song.name.toLowerCase().includes(fs));
+        })
+        : []; // Set playlistsToRender as empty array if we have no data
 
     return (
       <div className="App">
