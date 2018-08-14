@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+const NUM_SONGS_TO_DISPLAY = 3;
 
 // Default text color. Yay pink!
 let defaultStyle = {
@@ -64,7 +65,7 @@ class Playlist extends Component {
         <img src={playlist.imageUrl} style={{width: "120px"}} alt={playlist.name} />
         <h3>{playlist.name}</h3>
         <ol>
-          {playlist.songs.slice(0, 3).map(song =>
+          {playlist.songs.slice(0, NUM_SONGS_TO_DISPLAY).map(song =>
             <li key={song.name}>
               {song.name}
             </li>
@@ -81,5 +82,6 @@ export {
   PlaylistCounter,
   HoursCounter,
   Filter,
-  Playlist
+  Playlist,
+  NUM_SONGS_TO_DISPLAY
 };

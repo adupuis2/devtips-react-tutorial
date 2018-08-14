@@ -4,7 +4,8 @@ import {
   PlaylistCounter,
   HoursCounter,
   Filter,
-  Playlist
+  Playlist,
+  NUM_SONGS_TO_DISPLAY
 } from "./Components";
 import qs from "query-string"; // Used to parse access token
 import "./App.css";
@@ -45,7 +46,7 @@ function FetchAndSetPlaylistDetails(accessToken, context) {
       .then(tracksLists => {
         tracksLists.forEach((trackList, i) => {
           playlists[i].trackList =
-            trackList.items.slice(0,3).map(item => item.track);
+            trackList.items.slice(0,NUM_SONGS_TO_DISPLAY).map(item => item.track);
         });
         return playlists;
       });
