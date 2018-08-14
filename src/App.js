@@ -161,7 +161,10 @@ class App extends Component {
                 )
               }
             </div> : <button
-              onClick={() => window.location = "http://btrplaylist-backend.herokuapp.com/login"}
+              onClick={() => window.location = 
+                window.location.href.includes("localhost") ?
+                  "http://localhost:8888/login" :
+                  "http://btrplaylist-backend.herokuapp.com/login"}
               style={{
                 "padding": "20px",
                 "fontSize": "50px",
