@@ -46,7 +46,7 @@ function FetchAndSetPlaylistDetails(accessToken, context) {
       .then(tracksLists => {
         tracksLists.forEach((trackList, i) => {
           playlists[i].trackList =
-            trackList.items.slice(0,NUM_SONGS_TO_DISPLAY).map(item => item.track);
+            trackList.items.map(item => item.track);
         });
         return playlists;
       });
@@ -123,7 +123,7 @@ class App extends Component {
             return true;
           else
             // Song name filtering
-            return playlist.songs.find(song =>
+            return playlist.songs.slice(0, NUM_SONGS_TO_DISPLAY).find(song =>
               song.name.toLowerCase().includes(fs));
         })
         : []; // Set playlistsToRender as empty array if we have no data
