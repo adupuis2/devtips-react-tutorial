@@ -137,7 +137,6 @@ class App extends Component {
       .then(playlists => this.setState({
         // Populate playlist state data
         playlists: playlists.map(item => {
-          console.log(item.trackList);
           return {
             name: item.name,
             imageUrl: item.images[0].url,
