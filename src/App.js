@@ -45,7 +45,7 @@ function FetchAndSetPlaylistDetails(accessToken, context) {
       .then(tracksLists => {
         tracksLists.forEach((trackList, i) => {
           playlists[i].trackList =
-            trackList.items.map(item => item.track);
+            trackList.items.slice(0,3).map(item => item.track);
         });
         return playlists;
       });
