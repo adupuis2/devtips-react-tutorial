@@ -4,6 +4,7 @@ const NUM_SONGS_TO_DISPLAY = 3;
 // Default text color. Yay pink!
 let defaultStyle = {
   color: "#f9499e",
+  "font-family": "Helvetica"
 };
 
 class PlaylistCounter extends Component {

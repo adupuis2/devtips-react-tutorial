@@ -8,6 +8,7 @@ import {
   NUM_SONGS_TO_DISPLAY
 } from "./Components";
 import qs from "query-string"; // Used to parse access token
+import "reset-css";
 import "./App.css";
 
 // Retrieve a promise for the playlists' json
