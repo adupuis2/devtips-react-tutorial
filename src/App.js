@@ -123,7 +123,7 @@ class App extends Component {
             return true;
           else
             // Song name filtering
-            return playlist.songs.some(song =>
+            return playlist.songs.find(song =>
               song.name.toLowerCase().includes(fs));
         })
         : []; // Set playlistsToRender as empty array if we have no data
