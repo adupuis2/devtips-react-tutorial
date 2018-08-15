@@ -60,6 +60,7 @@ function FetchAndSetPlaylistDetails(accessToken, context) {
       playlists: playlists.map(item => {
         return {
           name: item.name,
+          id: item.id,
           imageUrl: item.images[0].url,
           songs: item.trackList.map(track => ({
             name: track.name,
@@ -136,7 +137,11 @@ class App extends Component {
           // If user data exists and there are no errors, draw page.
           // Must be wrapped in div – can only return a single tag.
           ? <div>
-            <h1 style={{ ...defaultStyle, "fontSize": "54px" }}>
+            <h1 style={{
+              ...defaultStyle,
+              fontSize: "54px",
+              marginTop: "10px"
+            }}>
               {this.state.user.name + "'s"} Playlists
             </h1>
             <PlaylistCounter playlists={playlistsToRender} />
@@ -153,9 +158,9 @@ class App extends Component {
               ? "http://localhost:8888/login"
               : "http://btrplaylist-backend.herokuapp.com/login"}
           style={{
-            "padding": "20px",
-            "fontSize": "50px",
-            "marginTop": "20px"
+            padding: "20px",
+            fontSize: "50px",
+            marginTop: "20px"
           }}>Sign in to Spotify</button>
         }
       </div>
